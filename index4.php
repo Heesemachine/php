@@ -84,7 +84,7 @@ else{
         "lprice" => $_GET["lprice"]];
     $_SESSION["factory"] = $aauction;
 }
-function sortBySmth($arr, $fprice,$startl){
+function sortByDateAndPrice($arr, $fprice,$startl){
     $newArr = [];
     for($i = 0; $i < count($arr); $i++){
         if($startl == $arr[$i]["startl"] && $arr[$i]["fprice"] < $fprice){
@@ -111,7 +111,7 @@ for($i = 0; $i < count($aauction); $i++){
 }
 echo "</table>";
 
-$arr = sortBySmth($aauction,15000,"16.10.2022");
+$arr = sortByDateAndPrice($aauction,15000,"16.10.2022");
 echo "<h2>Таблиця запиту</h2>";
 echo "<table>";
 echo "<tr> <th>Code</th> <th>Name</th> <th>StartLot</th> <th>Endlot</th> <th>FirstPrice</th> <th>Lastprice</th> </tr>";
