@@ -146,7 +146,7 @@ echo "</table>";
         <input type="number"  name="code" placeholder="Код"> <br>
         <input type="text"  name="name" placeholder="Імя лота"> <br>
         <input type="text" name="startl" placeholder="Початкова дата"> <br>
-        <input type="text" name="endl"  placeholder="Кінцева Ціна"> <br>
+        <input type="text" name="endl"  placeholder="Кінцева дата"> <br>
         <input type="number" name="fprice" placeholder="Початкова ціна"><br>
         <input type="number" name="lprice" placeholder="Кінцева ціна"><br>
         <input type="submit" name="btn-ok" value="ok">
