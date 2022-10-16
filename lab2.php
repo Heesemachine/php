@@ -1,6 +1,6 @@
 <?php
 
-function defaultDataLots()
+function defaultDataAuction()
 {
     return [
         [
@@ -14,7 +14,7 @@ function defaultDataLots()
         ],
         [
             "id" => 2,
-            "name" => "Istartl",
+            "name" => "Iphone",
             "startl" => "16.10.2022",
             "endl" => "22.10.2022",
             "fprice" => 10000,
@@ -22,12 +22,21 @@ function defaultDataLots()
         ],
         [
             "id" => 3,
-            "name" => "Istartl",
-            "startl" => "16.10.2022",
-            "endl" => "22.10.2022",
-            "fprice" => 10000,
-            "lprice" => 15000,
+            "name" => "Ipad",
+            "startl" => "18.10.2022",
+            "endl" => "25.10.2022",
+            "fprice" => 11000,
+            "lprice" => 16000,
         ],
+        [
+            "id" => 4,
+            "name" => "IMac",
+            "startl" => "23.10.2022",
+            "endl" => "29.10.2022",
+            "fprice" => 8000,
+            "lprice" => 14400,
+        ],
+
     ];
 }
 
@@ -43,7 +52,7 @@ function CreateNewLot($array, $id)
     ];
 }
 
-function validationDataLots($array)
+function validationDataAuction($array)
 {
     return !(
         empty($array['name']) ||
@@ -51,23 +60,22 @@ function validationDataLots($array)
         empty($array['endl']) ||
         empty($array['fprice']) ||
         empty($array['lprice']) ||
-        $array['startl'] < 0 ||
         $array['fprice'] < 0 ||
         !isset($array)
     );
 }
 
-function sortBySmth($arr, $startl, $fprice)
+function sortBySmth($arr, $fprice, $startl)
 {
     return array_filter(
         $arr,
-        function ($value) use ($startl, $fprice) {
-            return ($startl == $value["startl"] && $value["fprice"] < $fprice);
+        function ($value) use ($fprice, $startl) {
+            return ($value["fprice"] == $fprice and $value["startl"] > $startl);
         }
     );
 }
 
-function displayTableLots($array, $caption)
+function DisplayTableAuction($array, $caption)
 {
     $table = '<table>';
     $table .= "<caption> $caption </caption>";
@@ -90,46 +98,46 @@ if (!isset($_SESSION)) {
 
 // setting default values
 if (empty($_SESSION)) {
-    $_SESSION['Auction'] = defaultDataLots();
+    $_SESSION['Auction'] = defaultDataAuction();
 }
 
 $actionToDo = $_POST['action'];
 
 // adding client
 if ($actionToDo == 'add') {
-    if (validationDataLots($_POST)) {
-        $nextLotIdE = count($_SESSION['Lots']) + 1;
-        $_SESSION['Lots'][] = CreateNewLot($_POST, $nextLotIdE);
+    if (validationDataAuction($_POST)) {
+        $nextLotIdE = count($_SESSION['Auction']) + 1;
+        $_SESSION['Auction'][] = CreateNewLot($_POST, $nextLotIdE);
     }
 } // editing client
 elseif ($actionToDo == 'edit') {
-    if (validationDataLots($_POST)) {
+    if (validationDataAuction($_POST)) {
         $idToEdit = $_POST['id'];
-        foreach ($_SESSION['Lots'] as $key => $value) {
+        foreach ($_SESSION['Auction'] as $key => $value) {
             if ($value['id'] == $idToEdit) {
-                $_SESSION['Lots'][$key] = CreateNewLot($_POST, $idToEdit);
+                $_SESSION['Auction'][$key] = CreateNewLot($_POST, $idToEdit);
                 break;
             }
         }
     }
-} // filtering Lots
+} // filtering Auction
 elseif ($actionToDo == 'filter') {
-    displayTableLots(
-        sortBySmth($_SESSION['Lots'], $_POST['name'], $_POST['fprice']),
-        'Specified Lots'
+    DisplayTableAuction(
+        sortBySmth($_SESSION['Auction'], $_POST['startl'], $_POST['fprice']),
+        'Specified Auction'
     );
-} // saving data to Lots.txt
+} // saving data to Auction.txt
 elseif ($actionToDo == 'save') {
-    $file = fopen("Lots.txt", "w");
-    fwrite($file, serialize($_SESSION['Lots']));
+    $file = fopen("Auction.txt", "w");
+    fwrite($file, serialize($_SESSION['Auction']));
     fclose($file);
-} // loading data from Lots.txt
+} // loading data from Auction.txt
 elseif ($actionToDo == 'load') {
-    $_SESSION['Lots'] = unserialize(file_get_contents("Lots.txt"));
+    $_SESSION['Auction'] = unserialize(file_get_contents("Auction.txt"));
 }
 
-// display all Lots
-displayTableLots($_SESSION['Lots'], 'Lots');
+// display all Auction
+DisplayTableAuction($_SESSION['Auction'], 'Auction');
 
 unset($_POST);
 ?>
@@ -150,7 +158,7 @@ unset($_POST);
         <input type='text' name='startl'>
     </label><br>
     <label> endl:
-        <input type='text' name='startl'>
+        <input type='text' name='endl'>
     </label><br>
     <label> fprice:
         <input type='number' name='fprice'>
@@ -192,8 +200,8 @@ unset($_POST);
 
 <form action='<?= $_SERVER['PHP_SELF'] ?>' method='post' id='filterForm'>
     Filter <br>
-    <label> name:
-        <input type='text' name='name'>
+    <label> startl:
+        <input type='text' name='startl'>
     </label><br>
     <label> fprice:
         <input type='number' name='fprice'>
@@ -226,7 +234,7 @@ unset($_POST);
     }
 
     table, th, td {
-        border: 1px solid;
+        border: 5px solid;
         text-align: center;
     }
 
