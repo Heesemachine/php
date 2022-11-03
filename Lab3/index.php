@@ -1,7 +1,12 @@
 <?php
 
-include "Auction.php";
-include "AuctionCollections.php";
+//include "Auction.php";
+//include "AuctionCollections.php";
+
+spl_autoload_register(function ($class_name) {
+    include $class_name . '.php';
+});
+
 
 if (!isset($_SESSION)) {
     session_start();
@@ -34,7 +39,7 @@ if ($actionToDo == 'add') {
     $_SESSION['Auction']->loadAuction();
 }
 
-echo $_SESSION['Auction']->displayAuction();
+//echo $_SESSION['Auction']->displayAuction();
 ?>
 <br>
 
